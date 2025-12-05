@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VoteOnline</title>
+    <style>
+        body{font-family:Arial;padding:20px;}
+        .box{border:1px solid #777;padding:15px;margin:10px 0;}
+        button{margin-top:10px;padding:6px 12px;}
+        select,input{margin:5px;}
+    </style>
+</head>
+<body>
+
+<h2>VoteOnline System</h2>
+
+<!-- ADMIN SECTION -->
+<div class="box" id="adminBox">
+    <h3>Admin Panel</h3>
+    <p><b>1. Add Candidates</b></p>
+    <input type="text" id="candidateName" placeholder="Candidate Name">
+    <button onclick="addCandidate()">Add</button>
+    <p><b>Candidate List:</b></p>
+    <ul id="candidateList"></ul>
+
+    <p><b>2. Import Voter ID</b></p>
+    <input type="text" id="voterId" placeholder="Enter Voter ID">
+    <button onclick="addVoter()">Add</button>
+    <ul id="voterList"></ul>
+</div>
+
+<!-- USER LOGIN -->
+<div class="box">
+    <h3>Voter Login</h3>
+    <input id="loginVoterId" placeholder="Enter Voter ID">
+    <button onclick="generateOTP()">Get OTP</button>
+    <p id="otpMsg" style="color:green;"></p>
+</div>
+
+<!-- OTP VERIFY -->
+<div class="box" id="otpBox" style="display:none;">
+    <h3>Verify OTP</h3>
+    <input id="enteredOTP" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Login</button>
+    <p id="otpStatus"></p>
+</div>
+
+<!-- VOTING SECTION -->
+<div class="box" id="voteBox" style="display:none;">
+    <h3>Select Candidate</h3>
+    <select id="voteSelect"></select>
+    <button onclick="submitVote()">Submit Vote</button>
+    <p id="voteStatus"></p>
+</div>
+
+<script>
+let candidates=[], voters=[], votedUsers=[], storedOTP=null, currentUser=null;
+
+function addCandidate(){
+    let name=document.getElementById("candidateName").value;
+    if(name){
+        candidates.push(name);
+        updateCandidates();
+        document.getElementById("candidateName").value="";
+    }
+}
+
+function updateCandidates(){
+    document.getElementById("candidateList").innerHTML=candidates.map(c=>"<li>"+c+"</li>").join("");
+    document.getElementById("voteSelect").innerHTML=candidates.map(c=>"<option>"+c+"</option>").join("");
+}
+
+function addVoter(){
+    let id=document.getElementById("voterId").value;
+    if(id){
+        voters.push(id);
+        document.getElementById("voterList").innerHTML=voters.map(v=>"<li>"+v+"</li>").join("");
+        document.getElementById("voterId").value="";
+    }
+}
+
+function generateOTP(){
+    let id=document.getElementById("loginVoterId").value;
+    if(voters.includes(id)){
+        storedOTP=Math.floor(1000+Math.random()*9000);
+        currentUser=id;
+        document.getElementById("otpMsg").innerText="OTP: "+storedOTP;
+        document.getElementById("otpBox").style.display="block";
+    }else{
+        alert("Voter ID not found!");
+    }
+}
+
+function verifyOTP(){
+    if(document.getElementById("enteredOTP").value==storedOTP){
+        document.getElementById("otpStatus").innerText="Login Successful!";
+        document.getElementById("voteBox").style.display="block";
+    }else{
+        document.getElementById("otpStatus").innerText="Incorrect OTP!";
+    }
+}
+
+function submitVote(){
+    if(votedUsers.includes(currentUser)){
+        document.getElementById("voteStatus").innerHTML="⚠ You already voted!";
+    }else{
+        votedUsers.push(currentUser);
+        document.getElementById("voteStatus").innerHTML="✔ Vote Submitted Successfully!";
+    }
+}
+</script>
+
+</body>
+
+</html>
