@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register & Login</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f0f0;  
+            text-align: center;
+        }
+
+        .box {
+            background-color: #4682B4;
+            width: 300px;
+            margin: 40px auto;
+            padding: 20px;
+            color: white;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            background: darkblue;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: navy;
+        }
+
+        #loginBox {
+            display: none;
+            background: #2E8B57;
+        }
+    </style>
+</head>
+<body>
+
+<h1>User System</h1>
+
+<!-- Registration Form -->
+<div class="box" id="registerBox">
+    <h2>Register</h2>
+    <input type="text" id="regName" placeholder="Full Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
+</div>
+
+<!-- Login Form -->
+<div class="box" id="loginBox">
+    <h2>Login</h2>
+    <input type="email" id="logEmail" placeholder="Email">
+    <input type="password" id="logPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<script>
+    // Store user data (temporarily using browser storage)
+    function register() {
+        let name = document.getElementById("regName").value;
+        let email = document.getElementById("regEmail").value;
+        let password = document.getElementById("regPassword").value;
+
+        if (name === "" || email === "" || password === "") {
+            alert("All fields are required!");
+            return;
+        }
+
+        localStorage.setItem("name", name);
+        localStorage.setItem("email", email);
+        localStorage.setItem("password", password);
+
+        alert("Registered Successfully!");
+        
+        document.getElementById("registerBox").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
+    }
+
+    function login() {
+        let email = document.getElementById("logEmail").value;
+        let password = document.getElementById("logPassword").value;
+
+        if (email === localStorage.getItem("email") && password === localStorage.getItem("password")) {
+            alert("Login Successful! Welcome " + localStorage.getItem("name"));
+        } else {
+            alert("Incorrect Email or Password!");
+        }
+    }
+</script>
+
+</body>
+</html>
